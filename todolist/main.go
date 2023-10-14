@@ -26,7 +26,7 @@ var db *mgo.Database
 
 const (
 	hostName       string = "localhost:27017"
-	dbName         string = "demo_todo"
+	dbName         string = "Ttodoapp"
 	collectionName string = "todo"
 	port           string = ":9000"
 )
@@ -68,15 +68,13 @@ func createTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// simple validation
 	if t.Title == "" {
 		rnd.JSON(w, http.StatusBadRequest, renderer.M{
-			"message": "The title field is requried",
+			"message": "The title cannot be empty",
 		})
 		return
 	}
 
-	// if input is okay, create a todo
 	tm := todoModel{
 		ID:        bson.NewObjectId(),
 		Title:     t.Title,
@@ -114,7 +112,6 @@ func updateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// simple validation
 	if t.Title == "" {
 		rnd.JSON(w, http.StatusBadRequest, renderer.M{
 			"message": "The title field is requried",
@@ -122,7 +119,6 @@ func updateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if input is okay, update a todo
 	if err := db.C(collectionName).
 		Update(
 			bson.M{"_id": bson.ObjectIdHex(id)},
@@ -136,7 +132,7 @@ func updateTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rnd.JSON(w, http.StatusOK, renderer.M{
-		"message": "Todo updated successfully",
+		"message": "todo Updated successfully",
 	})
 }
 
@@ -173,7 +169,7 @@ func deleteTodo(w http.ResponseWriter, r *http.Request) {
 
 	if !bson.IsObjectIdHex(id) {
 		rnd.JSON(w, http.StatusBadRequest, renderer.M{
-			"message": "The id is invalid",
+			"message": "Invalid id",
 		})
 		return
 	}
@@ -237,6 +233,6 @@ func todoHandlers() http.Handler {
 
 func checkErr(err error) {
 	if err != nil {
-		log.Fatal(err) //respond with error page or message
+		log.Fatal(err)
 	}
 }
