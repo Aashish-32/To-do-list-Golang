@@ -1,8 +1,6 @@
 package main
 
 import (
-	//"context"
-	//"encoding/json" //encode bson to json
 	"context"
 	"encoding/json"
 	"log"      //log errors
@@ -25,21 +23,23 @@ var rnd *renderer.Render
 var db *mgo.Database
 
 const (
-	hostName       string = "localhost:27017"
+	hostName       string = "localhost:27017" //27017 is default port of mongodb
 	dbName         string = "Ttodoapp"
 	collectionName string = "todo"
 	port           string = ":9000"
 )
 
 type (
-	todoModel struct {
+	todoModel struct { //Struct with bson to communicate with mongodb.
+
 		ID        bson.ObjectId `bson:"_id,omitempty"`
 		Title     string        `bson:"title"`
 		Completed bool          `bson:"completed"`
 		CreatedAt time.Time     `bson:"createAt"`
 	}
 
-	todo struct {
+	todo struct { //Struct with json to communicate with client.
+
 		ID        string    `json:"id"`
 		Title     string    `json:"title"`
 		Completed bool      `json:"completed"`
@@ -56,7 +56,7 @@ func init() {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	err := rnd.Template(w, http.StatusOK, []string{"static/home.tpl"}, nil)
+	err := rnd.Template(w, http.StatusOK, []string{"static/home.tpl"}, nil) //last parameter currently "nil" represents any datacontext we can send to the .tpl file to make it dynamic.
 	checkErr(err)
 }
 
